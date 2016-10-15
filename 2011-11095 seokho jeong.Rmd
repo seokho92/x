@@ -1,0 +1,47 @@
+---
+title: "Untitled"
+author: "seokho"
+date: "2016년 10월 13일"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 2011-11095 정석호 Bayes 5.2
+
+
+```{r, echo=FALSE}
+n1<-16
+n2<-n1
+mu0<-75
+delta0<-10
+mu1<-75.2
+delta1<-7.3
+mu2<-77.5
+delta2<-8.1
+kappa0<-c(1,2,4,8,16,32)
+nu0<-c(1,2,4,8,16,32)
+nu1<-nu0+16
+nu2<-nu1
+sigma1<-c(0,0,0,0,0,0)
+sigma1<-(nu0*delta0^2+(n1-1)*delta1^2+kappa0*n1/(kappa0+n1)*(mu1-mu0)^2)/(nu1)
+sigma2<-(nu0*delta0^2+(n2-1)*delta2^2+kappa0*n2/(kappa0+n2)*(mu2-mu0)^2)/(nu2)
+set.seed(1)
+var1<-1/(rgamma(1000,nu1/2,sigma1*nu1/2))
+var2<-1/(rgamma(1000,nu2/2,sigma2*nu2/2))
+mean1<-(kappa0*mu0+n1*mu1)/(kappa0+n1)
+mean2<-(kappa0*mu0+n2*mu2)/(kappa0+n2)
+pr=rep(0,6)
+for (i in 1:6){
+theta1 <- rnorm(5000,mean1[i],sqrt(var1/(kappa0[i]+n1)))
+theta2 <- rnorm(5000,mean2[i],sqrt(var2/(kappa0[i]+n2)))
+pr[i]=mean(theta1<theta2)}
+```
+```{r, echo=FALSE}
+plot(kappa0,pr)
+```
+
+#κ와 υ의 size에 의해 pr(θ1>θ2\ya,yb)는 크게 민감하지 않다. 이는 θ1=θ2의 prior information을 strong information(κ=32)으로 적용하더라도 받아 들일 수 있다.
+
